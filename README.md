@@ -48,14 +48,15 @@ The program will continuously monitor your submissions list. When new submission
 
 ```
 Kernel: sample submission
-Submission time: 2020-04-28 13:43:50 UTC
+Submission start time: 2020-04-28 13:43:50 UTC
 Status: pending
 Public score: None
 ```
 
 ```
 Kernel: sample submission
-Submission time: 2020-04-28 14:13:28 UTC
+Submission finish time: 2020-04-28 14:13:28 UTC
 Status: complete
 Public score: 0.99
+Kernel runtime: 1778 seconds
 ```
