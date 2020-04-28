@@ -1,5 +1,3 @@
-Simple script that notifies you when Kaggle kernel submission completes using Telegram
-
 ## Requirements
 The code requires pyTelegramBotAPI and Kaggle API to be installed 
 Tested with Python 3.6.9
