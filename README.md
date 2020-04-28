@@ -5,7 +5,7 @@ The code was tested with Python 3.6.9
 $ pip install -r requirements.txt
 ```
 
-You need to configure your Kaggle API Credentials as described [here](https://github.com/Kaggle/kaggle-api/blob/master/README.md) if you haven't done it before.\
+You need to configure your Kaggle API Credentials as described [here](https://github.com/Kaggle/kaggle-api/blob/master/README.md) if you haven't done it before.
 
 Replace line 45 of```/lib/python3.6/site-packages/kaggle/models/kaggle_models_extended.py``` with the following:
 
