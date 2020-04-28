@@ -1,6 +1,6 @@
 ## Requirements
-The code requires pyTelegramBotAPI and Kaggle API to be installed\
-Tested with Python 3.6.9
+The code requires pytz, pysocks, pyTelegramBotAPI and Kaggle API to be installed\
+The code was tested with Python 3.6.9
 ```
 $ pip install -r requirements.txt
 ```
