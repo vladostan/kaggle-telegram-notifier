@@ -1,5 +1,3 @@
-
-# kaggle-telegram-notifier-dev
 Simple script that notifies you when Kaggle kernel submission completes using Telegram
 
 ## Requirements
