@@ -34,7 +34,7 @@ PORT = '1080' # Proxy Port
 There are also few parameters that you could change:
 
 ```python
-TIME_START_MONITOR_GAP = 15 # Timestep for refreshing your submissions list before new submission appears
+TIME_START_MONITOR_GAP = 30 # Timestep for refreshing your submissions list before new submission appears
 TIME_SUBMISSION_END_GAP = 5 # Timestep for refreshing your submissions list while your submission is being executed
 ```
 Run the script:
