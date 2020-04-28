@@ -1,11 +1,11 @@
 ## Requirements
-The code requires pyTelegramBotAPI and Kaggle API to be installed 
+The code requires pyTelegramBotAPI and Kaggle API to be installed\
 Tested with Python 3.6.9
 ```
 $ pip install -r requirements.txt
 ```
 
-You need to configure your Kaggle API Credentials as described [here](https://github.com/Kaggle/kaggle-api/blob/master/README.md) if you haven't done it before.
+You need to configure your Kaggle API Credentials as described [here](https://github.com/Kaggle/kaggle-api/blob/master/README.md) if you haven't done it before.\
 You also need to create own Telegram Bot to get its token. This is [one](https://firstwarning.net/vanilla/discussion/4/create-telegram-bot-and-get-bots-token-and-the-groups-chat-id) of many instructions available online.
 
 ## Run
