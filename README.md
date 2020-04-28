@@ -52,7 +52,6 @@ Submission start time: 2020-04-28 13:43:50 UTC
 Status: pending
 Public score: None
 ```
-
 ```
 Kernel: sample submission
 Submission finish time: 2020-04-28 14:13:28 UTC
