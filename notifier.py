@@ -23,18 +23,20 @@ api.authenticate()
 
 # In[]:
 COMPETITION = 'abstraction-and-reasoning-challenge' # Kaggle Competition Name
-TIME_START_MONITOR_GAP = 15 # Timestep for refreshing your submissions list before new submission appears
+TIME_START_MONITOR_GAP = 30 # Timestep for refreshing your submissions list before new submission appears
 TIME_SUBMISSION_END_GAP = 5 # Timestep for refreshing your submissions list while your submission is being executed
 
 while True:
     result = api.competition_submissions_cli(competition=COMPETITION, last_only=True)
     
-    while result['status'] == 'complete':
+    while result['status'] != 'pending':
         result = api.competition_submissions_cli(competition=COMPETITION, last_only=True)
         time.sleep(TIME_START_MONITOR_GAP)
+        
+    time_start = datetime.strptime(result['date'], '%Y-%m-%d %H:%M:%S')
 
     message = f"Kernel: {result['fileName']}\n" \
-    f"Submission time: {result['date']} UTC\n" \
+    f"Submission start time: {time_start} UTC\n" \
     f"Status: {result['status']}\n" \
     f"Public score: {result['publicScore']}\n"
     print(message)
@@ -47,11 +49,14 @@ while True:
     while result['status'] == 'pending':
         result = api.competition_submissions_cli(competition=COMPETITION, last_only=True)
         time.sleep(TIME_SUBMISSION_END_GAP)
+        
+    time_finish = datetime.now(timezone('UTC')).replace(microsecond=0).replace(tzinfo=None) - timedelta(seconds=TIME_SUBMISSION_END_GAP)
     
     message = f"Kernel: {result['fileName']}\n" \
-    f"Submission time: {datetime.now(timezone('UTC')).replace(microsecond=0).replace(tzinfo=None) - timedelta(seconds=TIME_SUBMISSION_END_GAP)} UTC\n" \
+    f"Submission finish time: {time_finish} UTC\n" \
     f"Status: {result['status']}\n" \
-    f"Public score: {result['publicScore']}\n"
+    f"Public score: {result['publicScore']}\n" \
+    f"Kernel runtime: {int((time_finish-time_start).total_seconds())} seconds"
     print(message)
     
     try:
