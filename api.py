@@ -4,25 +4,25 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 
 class MyKaggleApi(KaggleApi):
     
-    def competition_submissions_cli(self, competition=None, last_only=False):
+    def competition_submissions(self, competition):
+        """ get the list of Submission for a particular competition
+
+            Parameters
+            ==========
+            competition: the name of the competition
+        """
+        submissions_result = self.process_response(
+            self.competitions_submissions_list_with_http_info(id=competition))
+        
+        return submissions_result
+    
+    def competition_submissions_cli(self, competition=None, num=5):
 
         if competition is None:
             raise ValueError('No competition specified')
         else:
             submissions = self.competition_submissions(competition)
-            fields = [
-                'fileName', 'date', 'description', 'status', 'publicScore',
-                'privateScore'
-            ]
             if submissions:
-                return self.submissions_list(submissions, fields, last_only)
+                return submissions[:num]
             else:
                 print('No submissions found')
-    
-    def submissions_list(self, items, fields, last_only):
-        res = []
-        for i in items:
-            res.append({k: self.string(getattr(i, k)) for k in fields})
-            if last_only:
-                return res[0]
-        return res
