@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import telebot
-from api import MyKaggleApi
-from kaggle.models.kaggle_models_extended import parse
+from api_dev import MyKaggleApi, Notifier
 import time
-from datetime import datetime, timedelta
-from pytz import timezone
+import platform
 
 # In[]: Proxies list is available here: http://spys.one/en/socks-proxy-list/
 IP = '96.113.176.101' # Proxy IP
@@ -17,6 +15,7 @@ TOKEN = '1234567890:ABCDEFGHIJ' # Your telegram bot token
 CHAT_ID = 1234567890 # Your chat id with bot
 
 tb = telebot.TeleBot(TOKEN)
+notifier = Notifier(tb, CHAT_ID)
 
 # In[]: Kaggle API stuff                     
 api = MyKaggleApi()
@@ -25,49 +24,27 @@ api.authenticate()
 # In[]:
 COMPETITION = 'abstraction-and-reasoning-challenge' # Kaggle Competition Name
 TIME_START_MONITOR_GAP = 30 # Timestep for refreshing your submissions list before new submission appears
-TIME_SUBMISSION_END_GAP = 5 # Timestep for refreshing your submissions list while your submission is being executed
 
-while True:
+# In[]:
+try:
     
-    result = api.competition_submissions_cli(competition=COMPETITION, num=1)[0]
+    while True:
     
-    while result['status'] != 'pending':
-        result = api.competition_submissions_cli(competition=COMPETITION, num=1)[0]
-        time.sleep(TIME_START_MONITOR_GAP)
+        submission = api.competition_submissions_cli(competition=COMPETITION, num=1)[0]
         
-    time_start = parse(result['date'])
-
-    message = f"Submission name: {result['fileName']}\n" \
-    f"Submission id: {result['ref']}\n" \
-    f"Submission url: {result['url']}\n" \
-    f"Submission start time: {time_start} UTC\n" \
-    f"Submission status: {result['status']}\n"
-    print(message)
-    
-    try:
-        tb_message = tb.send_message(CHAT_ID, message)
-    except Exception as e:
-        print(e)
-    
-    while result['status'] == 'pending':
-        result = api.competition_submissions_cli(competition=COMPETITION, num=1)[0]
-        time.sleep(TIME_SUBMISSION_END_GAP)
+        while submission.status != 'pending':
+            submission = api.competition_submissions_cli(competition=COMPETITION, num=1)[0]
+            time.sleep(TIME_START_MONITOR_GAP)
+            
+        tb_message = notifier.notify(submission.start_info())
         
-    time_finish = datetime.now(timezone('UTC')).replace(microsecond=0).replace(tzinfo=None) - timedelta(seconds=TIME_SUBMISSION_END_GAP)
-    
-    message = f"Submission name: {result['fileName']}\n" \
-    f"Submission id: {result['ref']}\n" \
-    f"Submission url: {result['url']}\n" \
-    f"Submission finish time: {time_finish} UTC\n" \
-    f"Submission status: {result['status']}\n" \
-    f"Submission public score: {result['publicScore']}\n" \
-    f"Submission runtime: {int((time_finish-time_start).total_seconds())} seconds"
-    print(message)
-    
-    try:
-        if tb_message:
-            tb.reply_to(tb_message, message)
-        else:
-            tb.send_message(CHAT_ID, message)
-    except Exception as e:
-        print(e)
+        while submission.status == 'pending':
+            submission = api.competition_submissions_cli(competition=COMPETITION, num=1)[0]
+            time.sleep(submission.update_period)
+            
+        notifier.notify(submission.finish_info(), tb_message)
+        
+except KeyboardInterrupt:
+    platform_info = platform.uname()
+    message = f"Notifier is shut down on {platform_info.node} @ {platform_info.system}"
+    notifier.notify(message)
