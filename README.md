@@ -35,7 +35,6 @@ There are also few parameters that you could change:
 
 ```python
 TIME_START_MONITOR_GAP = 30 # Timestep for refreshing your submissions list before new submission appears
-TIME_SUBMISSION_END_GAP = 5 # Timestep for refreshing your submissions list while your submission is being executed
 ```
 Run the script:
 ```
@@ -47,15 +46,20 @@ The program will continuously monitor your submissions list. When new submission
 ## Notification example
 
 ```
-Kernel: sample submission
+Competition: abstraction-and-reasoning-challenge
+Submission name: sample submission
+Submission id: 12345678
+Submission url: https://www.kaggle.com/vostankovich/
+Submission status: pending
 Submission start time: 2020-04-28 13:43:50 UTC
-Status: pending
-Public score: None
 ```
 ```
-Kernel: sample submission
+Competition: abstraction-and-reasoning-challenge
+Submission name: sample submission
+Submission id: 12345678
+Submission url: https://www.kaggle.com/vostankovich/
+Submission status: complete
+Submission public score: 1.0
 Submission finish time: 2020-04-28 14:13:28 UTC
-Status: complete
-Public score: 0.99
-Kernel runtime: 1778 seconds
+Submission runtime: 1778 seconds
 ```
