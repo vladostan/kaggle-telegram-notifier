@@ -45,7 +45,7 @@ while True:
     print(message)
     
     try:
-        tb.send_message(CHAT_ID, message)
+        tb_message = tb.send_message(CHAT_ID, message)
     except Exception as e:
         print(e)
     
@@ -65,6 +65,9 @@ while True:
     print(message)
     
     try:
-        tb.send_message(CHAT_ID, message)
+        if tb_message:
+            tb.reply_to(tb_message, message)
+        else:
+            tb.send_message(CHAT_ID, message)
     except Exception as e:
         print(e)
