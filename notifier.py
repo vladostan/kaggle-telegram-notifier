@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import telebot
-from api_dev import MyKaggleApi, Notifier
+from api import MyKaggleApi, Notifier
 import time
 import platform
 
