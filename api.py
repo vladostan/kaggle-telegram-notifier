@@ -4,28 +4,21 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 from kaggle.models.kaggle_models_extended import parse
 from datetime import datetime, timedelta
 from pytz import timezone
+import platform
+
+def get_time():
+        
+    return datetime.now(timezone('UTC')).replace(microsecond=0).replace(tzinfo=None)
 
 class MyKaggleApi(KaggleApi):
     
-    def competition_submissions(self, competition):
-        """ get the list of Submission for a particular competition
-
-            Parameters
-            ==========
-            competition: the name of the competition
-        """
-        submissions_result = self.process_response(
-            self.competitions_submissions_list_with_http_info(id=competition))
-        
-        return submissions_result
-    
-    def competition_submissions_cli(self, competition=None, num=5):
+    def competition_submissions(self, competition=None, num=5):
 
         if competition is None:
             raise ValueError('No competition specified')
         else:
             submissions = []
-            for submission in self.competition_submissions(competition):
+            for submission in self.process_response(self.competitions_submissions_list_with_http_info(id=competition)):
                 submissions.append(Submission(submission, competition))
             if submissions:
                 return submissions[:num]
@@ -65,7 +58,7 @@ class Submission():
         
     def finish_info(self):
         
-        self.time_finish = datetime.now(timezone('UTC')).replace(microsecond=0).replace(tzinfo=None) - timedelta(seconds=self.update_period)
+        self.time_finish = get_time() - timedelta(seconds=self.update_period)
         
         message = str(self) + f"\nSubmission public score: {self.public_score}\n" \
         f"Submission finish time: {self.time_finish} UTC\n" \
@@ -79,6 +72,7 @@ class Notifier():
         self.tb = tb
         self.chat_id = chat_id
         self.to_console = to_console
+        self.platform = platform.uname()
         
     def notify(self, message, reply=None):
         
@@ -93,3 +87,18 @@ class Notifier():
         except Exception as e:
             if self.to_console:
                 print(e)
+                
+    def start(self):
+        
+        message = f"Kaggle Telegram Notifier initialized on {self.platform.node} @ {self.platform.system}\n" \
+        f"Starting to monitor submissions\n" \
+        f"Time: {get_time()} UTC\n"
+        
+        self.notify(message)
+        
+    def interrupted(self):
+        
+        message = f"Notifier is shut down on {self.platform.node} @ {self.platform.system}\n" \
+        f"Time: {get_time()} UTC\n"
+        
+        self.notify(message)
