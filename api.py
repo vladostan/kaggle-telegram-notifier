@@ -12,6 +12,10 @@ def get_time():
 
 class MyKaggleApi(KaggleApi):
     
+    def __init__(self):
+        super().__init__()
+        self.authenticate()
+    
     def competition_submissions(self, competition=None, num=5):
 
         if competition is None:
@@ -40,7 +44,7 @@ class Submission():
     
     def __repr__(self):
         
-        return f"Submission: {self.id}"
+        return f"Submission({self.id})"
     
     def __str__(self):
         
@@ -73,6 +77,7 @@ class Notifier():
         self.chat_id = chat_id
         self.to_console = to_console
         self.platform = platform.uname()
+        self.start()
         
     def notify(self, message, reply=None):
         
@@ -91,14 +96,21 @@ class Notifier():
     def start(self):
         
         message = f"Kaggle Telegram Notifier initialized on {self.platform.node} @ {self.platform.system}\n" \
-        f"Starting to monitor submissions\n" \
+        f"Time: {get_time()} UTC\n" \
+        f"Starting to monitor submissions\n"
+        
+        self.notify(message)
+        
+    def shutdown(self):
+        
+        message = f"Notifier is shut down on {self.platform.node} @ {self.platform.system}\n" \
         f"Time: {get_time()} UTC\n"
         
         self.notify(message)
         
-    def interrupted(self):
+    def api_error(self):
         
-        message = f"Notifier is shut down on {self.platform.node} @ {self.platform.system}\n" \
+        message = f"Kaggle API is not respoding\n" \
         f"Time: {get_time()} UTC\n"
         
         self.notify(message)

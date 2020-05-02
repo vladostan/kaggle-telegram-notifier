@@ -14,11 +14,10 @@ TOKEN = '1234567890:ABCDEFGHIJ' # Your telegram bot token
 CHAT_ID = 1234567890 # Your chat id with bot
 
 tb = telebot.TeleBot(TOKEN)
-notifier = Notifier(tb, CHAT_ID)
 
-# In[]: Kaggle API stuff                     
+# In[]:                      
 kapi = MyKaggleApi()
-kapi.authenticate()
+notifier = Notifier(tb, CHAT_ID)
 
 # In[]:
 COMPETITION = 'abstraction-and-reasoning-challenge' # Kaggle Competition Name
@@ -26,25 +25,29 @@ TIME_START_MONITOR_GAP = 30 # Timestep for refreshing your submissions list befo
 
 # In[]:
 try:
-    
-    notifier.start()
-    
+        
     while True:
     
         submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
         
         while submission.status != 'pending':
-            submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
+            try:
+                submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
+            except:
+                notifier.api_error()
             time.sleep(TIME_START_MONITOR_GAP)
             
         tb_message = notifier.notify(submission.start_info())
         
         while submission.status == 'pending':
-            submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
+            try:
+                submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
+            except:
+                notifier.api_error()
             time.sleep(submission.update_period)
             
         notifier.notify(submission.finish_info(), tb_message)
         
 except KeyboardInterrupt:
     
-    notifier.interrupted()
+    notifier.shutdown()
