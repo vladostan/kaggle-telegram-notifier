@@ -5,9 +5,12 @@ from api import MyKaggleApi, Notifier
 import time
 
 # In[]: Proxies list is available here: http://spys.one/en/socks-proxy-list/
-IP = '96.113.176.101' # Proxy IP
-PORT = '1080' # Proxy Port
-telebot.apihelper.proxy = {'https': f'socks5h://{IP}:{PORT}'}
+PROXY = False
+
+if PROXY:
+    IP = '96.113.176.101' # Proxy IP
+    PORT = '1080' # Proxy Port
+    telebot.apihelper.proxy = {'https': f'socks5h://{IP}:{PORT}'}
 
 # In[]: Telegram bot stuff
 TOKEN = '1234567890:ABCDEFGHIJ' # Your telegram bot token
@@ -20,33 +23,40 @@ kapi = MyKaggleApi()
 notifier = Notifier(tb, CHAT_ID)
 
 # In[]:
-COMPETITION = 'abstraction-and-reasoning-challenge' # Kaggle Competition Name
+COMPETITION = 'landmark-recognition-2020' # Kaggle Competition Name
 TIME_START_MONITOR_GAP = 30 # Timestep for refreshing your submissions list before new submission appears
 
 # In[]:
 try:
+    
+    pendings = {}
         
     while True:
     
-        submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
+        try:
+            submissions = kapi.competition_submissions(competition=COMPETITION, num=10)
+        except:
+            notifier.api_error()
         
-        while submission.status != 'pending':
-            try:
-                submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
-            except:
-                notifier.api_error()
-            time.sleep(TIME_START_MONITOR_GAP)
-            
-        tb_message = notifier.notify(submission.start_info())
+        for submission in submissions:
+            if submission.status == 'pending' and submission.id not in pendings:
+                tb_message = notifier.notify(submission.start_info())
+                pendings[submission.id] = tb_message
+                time.sleep(submission.update_period)
+                
+        time.sleep(TIME_START_MONITOR_GAP)
         
-        while submission.status == 'pending':
-            try:
-                submission = kapi.competition_submissions(competition=COMPETITION, num=1)[0]
-            except:
-                notifier.api_error()
-            time.sleep(submission.update_period)
-            
-        notifier.notify(submission.finish_info(), tb_message)
+        try:
+            submissions = kapi.competition_submissions(competition=COMPETITION, num=10)
+        except:
+            notifier.api_error()
+        
+        for submission in submissions:
+            if submission.status != 'pending' and submission.id in pendings:
+                notifier.notify(submission.finish_info(), pendings[submission.id])
+                del pendings[submission.id]
+                                
+        time.sleep(TIME_START_MONITOR_GAP)
         
 except KeyboardInterrupt:
     

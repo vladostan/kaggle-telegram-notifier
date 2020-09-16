@@ -23,11 +23,12 @@ Change the following parameters inside [notifier.py](https://github.com/vladosta
 ```python
 TOKEN = '1234567890:ABCDEFGHIJ' # Your telegram bot token
 CHAT_ID = 1234567890 # Your chat id with bot
-COMPETITION = 'abstraction-and-reasoning-challenge' # Kaggle Competition Name
+COMPETITION = 'landmark-recognition-2020' # Kaggle Competition Name
 ```
 
-For now pyTelegramBotAPI is configured to use proxy. If it fails, change the proxy parameters:
+For now pyTelegramBotAPI is configured to work without proxy. If you want to use proxy, change the following parameters:
 ```python
+PROXY = True
 IP = '96.113.176.101' # Proxy IP
 PORT = '1080' # Proxy Port
 ```
@@ -41,25 +42,25 @@ Run the script:
 $ python notifier.py
 ```
 
-The program will continuously monitor your submissions list. When new submission appears, you will receive the Telegram notification. After the submission ending you will receive the Telegram message as well. The program also outputs message to terminal, because sometimes Telegram services may not work or proxy may fail. For now, the program only monitors ONE last submission.
+The program will continuously monitor your submissions list. When new submission appears, you will receive the Telegram notification. After the submission ending you will receive the Telegram message as well. The program also outputs message to terminal, because sometimes Telegram services may not work or proxy may fail. For now, the program can monitor submissions for only ONE competition.
 
 ## Notification example
 
 ```
-Competition: abstraction-and-reasoning-challenge
+Competition: landmark-recognition-2020
 Submission name: sample submission
 Submission id: 12345678
-Submission url: https://www.kaggle.com/vostankovich/
+Submission url: https://www.kaggle.com/user/sample-submission?scriptVersionId=12345678
 Submission status: pending
-Submission start time: 2020-04-28 13:43:50 UTC
+Submission start time: 2020-09-15 20:34:39 UTC
 ```
 ```
-Competition: abstraction-and-reasoning-challenge
+Competition: landmark-recognition-2020
 Submission name: sample submission
 Submission id: 12345678
-Submission url: https://www.kaggle.com/vostankovich/
+Submission url: https://www.kaggle.com/user/sample-submission?scriptVersionId=12345678
 Submission status: complete
-Submission public score: 1.0
-Submission finish time: 2020-04-28 14:13:28 UTC
-Submission runtime: 1778 seconds
+Submission public score: 0.1234
+Submission finish time: 2020-09-15 20:55:13 UTC
+Submission runtime: 1234 seconds
 ```
