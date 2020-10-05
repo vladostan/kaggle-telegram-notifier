@@ -38,11 +38,12 @@ try:
         except:
             notifier.api_error()
         
-        for submission in submissions:
-            if submission.status == 'pending' and submission.id not in pendings:
-                tb_message = notifier.notify(submission.start_info())
-                pendings[submission.id] = tb_message
-                time.sleep(submission.update_period)
+        if submissions:
+            for submission in submissions:
+                if submission.status == 'pending' and submission.id not in pendings:
+                    tb_message = notifier.notify(submission.start_info())
+                    pendings[submission.id] = tb_message
+                    time.sleep(submission.update_period)
                 
         time.sleep(TIME_START_MONITOR_GAP)
         
@@ -51,10 +52,11 @@ try:
         except:
             notifier.api_error()
         
-        for submission in submissions:
-            if submission.status != 'pending' and submission.id in pendings:
-                notifier.notify(submission.finish_info(), pendings[submission.id])
-                del pendings[submission.id]
+        if submissions:
+            for submission in submissions:
+                if submission.status != 'pending' and submission.id in pendings:
+                    notifier.notify(submission.finish_info(), pendings[submission.id])
+                    del pendings[submission.id]
                                 
         time.sleep(TIME_START_MONITOR_GAP)
         
