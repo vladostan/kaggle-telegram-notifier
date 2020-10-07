@@ -7,15 +7,6 @@ $ pip install -r requirements.txt
 
 You need to configure your Kaggle API Credentials as described [here](https://github.com/Kaggle/kaggle-api/blob/master/README.md) if you haven't done it before.
 
-Replace line 45 of```/lib/python3.6/site-packages/kaggle/models/kaggle_models_extended.py``` with the following:
-
-```python
-try:
-    self.size = File.get_size(self.totalBytes)
-except:
-    self.size = 0
-```
-
 You also need to create own Telegram Bot to get its token. This is [one](https://firstwarning.net/vanilla/discussion/4/create-telegram-bot-and-get-bots-token-and-the-groups-chat-id) of many instructions available online.
 
 ## Run
