@@ -36,7 +36,7 @@ class Submission():
         self.competition = competition
         self.id = info['ref']
         self.name = info['fileName']
-        self.url = info['url']
+        self.url = f"https://www.kaggle.com{info['url']}"
         self.time_start = parse(info['date'])
         self.status = info['status']
         self.public_score = info['publicScore']
