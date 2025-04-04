@@ -1,4 +1,4 @@
-kaggle
-pyTelegramBotAPI
-pysocks
-pytz
+kaggle==1.6.0
+pyTelegramBotAPI==4.26.0
+pysocks==1.7.1
+pytz==2025.2
